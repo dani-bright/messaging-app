@@ -1,0 +1,25 @@
+{
+  "name": "messaging-app-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "dani",
+  "license": "ISC",
+  "dependencies": {
+    "moment-timezone": "^0.5.34",
+    "next": "^12.2.3",
+    "normalizr": "^3.6.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.6.3",
+    "@types/react": "^18.0.15",
+    "typescript": "^4.7.4"
+  }
+}
