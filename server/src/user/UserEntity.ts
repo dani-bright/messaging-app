@@ -1,8 +1,8 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 
-import { BaseEntity } from 'src/utils/BaseEntity';
 import { Message } from 'src/messsage/MessageEntity';
+import { BaseEntity } from 'src/utils/BaseEntity';
 
 @Entity('user')
 export class User extends BaseEntity {
@@ -29,7 +29,7 @@ export class User extends BaseEntity {
 
   public static get scopes(): Record<string, string[]> {
     return {
-      full: [],
+      full: ["sentMessages", "receivedMessages"],
     };
   }
 }

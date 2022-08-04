@@ -7,12 +7,12 @@ export const Menu = () => {
     <ul className={styles.menu}>
       <li>
         <Link href="/">
-          <a>Home</a>
+          <a>Se connecter</a>
         </Link>
       </li>
       <li>
-        <Link href="/inbox">
-          <a>panier</a>
+        <Link href="/register">
+          <a>S'enregistrer</a>
         </Link>
       </li>
     </ul>

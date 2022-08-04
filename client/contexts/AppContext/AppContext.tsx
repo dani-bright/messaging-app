@@ -1,10 +1,13 @@
 import * as React from 'react';
 import { FC, useContext, useState } from 'react';
-import { postLogin } from '../../api/user';
+import { createUser, postLogin } from '../../api/user';
 import { Actions, defaultFunctionParameter } from '../../helpers/helpers';
-import { user } from '../../schemas';
+import User from '../../models/User';
+import { userSchema } from '../../schemas';
 import { useEntitiesContext } from '../EntitiesContext/EntitiesContext';
 import { ActionTypes } from './actions';
+import { usePersistedContext } from 'react-persist-context'
+
 
 const setLocalStorage = (key, value) =>{
   if (typeof window !== "undefined") {
@@ -28,7 +31,7 @@ export interface ICartProvider {
 export interface StateInterface {
   connected: boolean;
   token: string;
-  user: number | null;
+  user: User;
 }
 
 export interface AppContextInterface {
@@ -38,6 +41,7 @@ export interface AppContextInterface {
   logout: () => void;
   fetchUser: () => void;
   postMessage: (id: number) => Promise<void>;
+  register: (user:Partial<User>) => Promise<void>;
 }
 
 export const initialState: StateInterface = {
@@ -64,10 +68,10 @@ export const AppReducer = (
       };
     }
  
-    case ActionTypes.SET_CONTACT: {
+    case ActionTypes.SET_USER: {
       return {
         ...state,
-        contact: action.payload,
+        user: action.payload,
       };
     }
     case ActionTypes.RESET_STATE: {
@@ -84,11 +88,14 @@ state: initialState,
   login: defaultFunctionParameter,
   logout: defaultFunctionParameter,
   postMessage: Promise.reject,
-  fetchUser: defaultFunctionParameter, });
+  register: Promise.reject,
+  fetchUser: defaultFunctionParameter,
+});
 export const useCart = () => useContext(AppContext);
 
 export const AppProvider  = ({ children }: { children: JSX.Element }) => {
-    const [state, dispatch] = React.useReducer(AppReducer, initialState);
+  const { state, dispatch} = usePersistedContext();
+
   const { addEntities, resetState } = useEntitiesContext();
 
   const setConnected = React.useCallback((connected: boolean) => {
@@ -104,9 +111,15 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
   const login = React.useCallback(async (email: string, password: string) => {
     const loggedUser = await postLogin(email, password);
     setToken(loggedUser.token);
-          setConnected(true);
+    dispatch({ type: ActionTypes.SET_USER, payload: loggedUser });
 
-    addEntities(user, loggedUser);
+    setConnected(true);
+    addEntities(userSchema, loggedUser);
+  }, []);
+
+  const register = React.useCallback(async (user:Partial<User>) => {
+    await createUser(user);
+
   }, []);
 
   const logout = React.useCallback(async () => {
@@ -136,7 +149,8 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
             logout,
             setToken,
             fetchUser,
-            postMessage:sendMessage,
+        postMessage: sendMessage,
+            register
         }}>
         {children}
         </AppContext.Provider>

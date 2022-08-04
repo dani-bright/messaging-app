@@ -1,15 +1,19 @@
+import * as bcrypt from 'bcrypt';
+
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+
 import { User } from 'src/user/UserEntity';
 import { UserService } from 'src/user/UserService';
 import { AuthError } from 'src/utils/errors';
-import * as bcrypt from 'bcrypt';
+
+import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
-    private jwtTokenService: JwtService,
+    private jwtService: JwtService,
   ) {}
 
   async validateUserCredentials(email: string, password: string): Promise<any> {
@@ -28,20 +32,13 @@ export class AuthService {
     return { ...user };
   }
 
-  async loginWithCredentials(user: User) {
-    const payload = { email: user.email, sub: user.id };
-    const existingUser = await this.validateUserCredentials(
-      user.email,
-      user.password,
-    );
-
+  async login(user: User) {
+    const payload = { username: user.email, sub: user.id };
     return {
-      ...existingUser,
-      token: this.jwtTokenService.sign(payload),
+      ...user,
+      token: this.jwtService.sign(payload, {
+        secret: jwtConstants.secret,
+      }),
     };
   }
 }
-
-export const jwtConstants = {
-  secret: 'secretKey',
-};

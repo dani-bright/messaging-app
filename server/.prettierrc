@@ -2,5 +2,6 @@
   "singleQuote": true,
   "trailingComma": "all",
   "importOrder": ["^@nestjs/(.*)$", "^src/(.*)$", "^[../](.*)", "^[./](.*)"],
-  "importOrderSeparation": true
+  "importOrderSeparation": true,
+  "importOrderParserPlugins" : ["classProperties", "decorators-legacy", "typescript"]
 }

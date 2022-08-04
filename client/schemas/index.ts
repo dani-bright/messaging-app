@@ -1,13 +1,13 @@
 import { schema } from 'normalizr';
 
 
-export const user = new schema.Entity('user');
-export const message = new schema.Entity('message');
+export const userSchema = new schema.Entity('user');
+export const messageSchema = new schema.Entity('message');
 
 
 const schemas = [
-  user,
-  message,
+  userSchema,
+  messageSchema,
 ] as const;
 
 export type Schemas =

@@ -2,7 +2,9 @@ import { Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { BaseService } from 'src/utils/baseService';
+
 import { Message } from './MessageEntity';
 
 @Injectable()

@@ -1,14 +1,17 @@
-import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+
 import {
   BadRequestException,
   NotFoundException,
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dtos/CreateUserDto';
-import { User } from './UserEntity';
+
 import { BaseService } from 'src/utils/baseService';
+
+import { User } from './UserEntity';
+import { CreateUserDto } from './dtos/CreateUserDto';
 
 @Injectable()
 export class UserService extends BaseService<User> {

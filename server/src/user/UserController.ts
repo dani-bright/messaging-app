@@ -8,10 +8,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+
 import { JwtAuthGuard } from 'src/auth/JwtAuthGuard';
-import { CreateUserDto } from './dtos/CreateUserDto';
+
 import { User } from './UserEntity';
 import { UserService } from './UserService';
+import { CreateUserDto } from './dtos/CreateUserDto';
 
 export type UserStrategyRequest = Request & { user?: User };
 
