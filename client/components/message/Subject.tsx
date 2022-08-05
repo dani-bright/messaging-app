@@ -2,12 +2,13 @@ import { FC, memo } from 'react';
 import styles from "./Message.module.css";
 import Message from '../../models/Message';
 
-export interface MessageProps{
+export interface SubjectProps{
   message: Message;
+  read: boolean;
   onClick: ({sender, subject, content}:Pick<Message, "sender" | "subject" | "content">) => any;
 }
 
-export const MessageComponent: FC<MessageProps> = ({ message, onClick }) => {
+export const Subject: FC<SubjectProps> = ({ message, onClick, read }) => {
   const handleClick = () => {
     onClick({
       sender: message.sender,
@@ -15,12 +16,17 @@ export const MessageComponent: FC<MessageProps> = ({ message, onClick }) => {
       content: message.content,
     })
   }
+  
     return (
-      <main className={styles.message} onClick={handleClick}>
-        <p className={styles.sender}>
+      <main className={styles.main} onClick={handleClick}>
+        <div className={`${styles.read} ${read ? styles.seen : ''}`}></div>
+        <div className={styles.subject}>
+          <p className={styles.sender}>
           {message.sender?.firstname} {message.sender?.lastname}
-        </p>
-        <p className={styles.subject}>{message.subject}</p>
+          </p>
+          <p >{message.subject}</p>
+        </div>
+        
       </main>
     );
 };

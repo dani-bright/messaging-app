@@ -4,18 +4,19 @@ import styles from "../styles/Inbox.module.css";
 
 
 import { useRouter } from 'next/router';
-import { MessageComponent } from "../components/message/Message";
+import { Subject } from "../components/message/Subject";
 import User from "../models/User";
 import { Header } from "../components/Header";
-import { MessagePreview } from "../components/message/MessagePreview";
+import { Conversation as Conversation } from "../components/message/Conversation";
 import { MessageSender } from "../components/message/MessageSender";
 import { groupBy } from "../helpers/helpers";
 import Message from "../models/Message";
+import { useConversation } from "../hooks/useConversation";
 
 
 export default function Inbox() {
 
-  const { state: { connected:userConnected, user:me } } = useAppContext() ;
+  const { state: { connected:userConnected, user:me }, readConversation } = useAppContext() ;
   const router = useRouter();
 
   const [user, setUser] = useState<User>(undefined);
@@ -25,7 +26,7 @@ export default function Inbox() {
   //https://nextjs.org/docs/messages/react-hydration-error
   useEffect(() => {
     setUser(me);
-  }, []);  
+  }, [me]);  
 
   useEffect(() => {
     if (!userConnected) {
@@ -33,21 +34,24 @@ export default function Inbox() {
     }
   }, [userConnected]);
 
+
   
   const showMessagePreview = (message) => {
-    setSelectedMessage(message)
+    setSelectedMessage(message);
   }
 
   if (!user) {
     return null;
   }
 
-
-   const messages = [...user.receivedMessages,...user.sentMessages];
+  const messages = [...user.receivedMessages,...user.sentMessages];
   const subjects = groupBy(messages, (message: Message) => message.subject);
 
-   const receivedSubject = Array.from(subjects.values()).map(messages => <MessageComponent key={messages[0].subject} message={messages[0]} onClick={showMessagePreview} />);
-  
+  const receivedSubject = Array.from(subjects.values()).map(messages => {    
+    const read = messages.filter(message=>message.sender.id !== user.id).every(message => message.read);
+    
+    return <Subject key={messages[0].subject} read={read} message={messages[0]} onClick={showMessagePreview} />
+  });  
   
   const inboxMessageCount = user.receivedMessages?.length || 0;
 
@@ -57,11 +61,17 @@ export default function Inbox() {
       <div className={styles.inbox}>
         <aside className={styles.messages}>
           <MessageSender />
-          <div>boite de réception ({inboxMessageCount})</div>
+          <div>
+            <p>boite de réception ({inboxMessageCount})</p>
+            <div>
+              <input type="checkbox" />
+              afficher uniquement les mails non-lus
+            </div>
+          </div>
           {receivedSubject}
         </aside>
       <section className={styles.preview}>
-          <MessagePreview message={selectedMessage}/>
+          <Conversation message={selectedMessage}/>
       </section>
       </div>
      

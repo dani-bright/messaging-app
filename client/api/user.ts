@@ -28,3 +28,16 @@ export async function getUsers(
 ): Promise<User & { token: string }> {
   return fetchApi('GET', 'user', token);
 }
+
+export async function patchMessages(
+  token: string,
+  userId: number,
+  messageIds:number[]
+) {
+  return fetchApi<User>(
+    'POST',
+    `user/read-conversation`,
+    token,
+    {body:{messageIds, userId}}
+  );
+}

@@ -1,4 +1,5 @@
 import Message from '../models/Message';
+import User from '../models/User';
 import { fetchApi } from './fetchApi';
 
 export async function createMessage(
@@ -14,3 +15,4 @@ export async function createMessage(
     },
   );
 }
+

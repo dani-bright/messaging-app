@@ -15,8 +15,10 @@ export default function Home() {
 
   useEffect(() => {
     if (connected) {
-      fetchUsers();
-      router.push('/inbox');
+      fetchUsers().then(() => {
+         router.push('/inbox');
+      }
+      );
     }
   }, [connected]);
 

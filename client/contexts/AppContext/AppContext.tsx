@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FC, useContext, useState } from 'react';
-import { createUser, getUsers, postLogin } from '../../api/user';
+import { createUser, getUsers, postLogin, patchMessages } from '../../api/user';
 import { Actions, defaultFunctionParameter } from '../../helpers/helpers';
 import User from '../../models/User';
 import { userSchema } from '../../schemas';
@@ -41,9 +41,10 @@ export interface AppContextInterface {
   setToken: (token: string) => void;
   login: (email: string, password: string) => void;
   logout: () => void;
-  fetchUsers: () => void;
+  fetchUsers: () => Promise<void>;
   sendMessage: (message:Partial<Message>) => Promise<Message>;
-  register: (user:Partial<User>) => Promise<void>;
+  register: (user: Partial<User>) => Promise<void>;
+  readConversation :(userId, messageIds:number[])=> Promise<void>
 }
 
 export const initialState: StateInterface = {
@@ -100,6 +101,7 @@ state: initialState,
   sendMessage: Promise.reject,
   register: Promise.reject,
   fetchUsers: defaultFunctionParameter,
+  readConversation: Promise.reject,
 });
 export const useCart = () => useContext(AppContext);
 
@@ -147,6 +149,12 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
     return createdMessage;
   }, [state.token, state.user]);
 
+  const readConversation = React.useCallback(async (userId:number, messageIds:number[]) => {
+    const user = await patchMessages(state.token, userId, messageIds);
+    dispatch({ type: ActionTypes.SET_USER, payload: user });
+
+  }, [state.token, state.user]);
+
   const fetchUsers = React.useCallback(async () => {
     const users = await getUsers(state.token);
 
@@ -161,7 +169,8 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
             setToken,
             fetchUsers,
             sendMessage,
-            register
+            register,
+            readConversation
         }}>
         {children}
         </AppContext.Provider>

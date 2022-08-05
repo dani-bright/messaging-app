@@ -8,16 +8,19 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { MessageService } from 'src/messsage/MessageService';
 import { BaseService } from 'src/utils/baseService';
 
 import { User } from './UserEntity';
 import { CreateUserDto } from './dtos/CreateUserDto';
+import { ReadSubjectDto } from './dtos/ReadSubjectDto';
 
 @Injectable()
 export class UserService extends BaseService<User> {
   constructor(
     @InjectRepository(User)
     repository: Repository<User>,
+    private messageService: MessageService,
   ) {
     super(repository);
   }
@@ -50,5 +53,14 @@ export class UserService extends BaseService<User> {
     const userCreated = await this.repository.save(params);
 
     return this.getOne(userCreated.id);
+  }
+
+  async readSubject(readSubjectDto: ReadSubjectDto): Promise<User> {
+    try {
+      await this.messageService.readMessages(readSubjectDto.messageIds);
+      return this.getOne(readSubjectDto.userId, User.scopes.full);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

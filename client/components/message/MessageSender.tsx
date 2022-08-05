@@ -43,15 +43,18 @@ export const MessageSender: FC = () => {
     });
   }
 
-  const receivers = users.filter(user => user.id !== currentUser.id);
+  const receivers = users.filter(user => user.id !== currentUser.id);  
 
     return (
       <main className={styles.sender}>
         <button className={styles.send} onClick={showSender}>nouveau message</button>
         <form onSubmit={submit} className={`${formStyles.form} ${formStyles.popup} ${show? formStyles.show: formStyles.hide}`}>
           <p onClick={hideSender}>fermer</p>
-          <select name="receiverId" onChange={handleChange} defaultValue={receivers[0].id}>{
-            receivers.map(user => <option key={user.id} value={user.id}>{user.email}</option>)}
+          <select name="receiverId" onChange={handleChange}>
+            <option value="">choissez un destinataire</option>
+            {
+              receivers.map(user => <option key={user.id} value={user.id}>{user.email}</option>)
+            }
           </select>
           <input type="text" name='subject' value={form.subject} onChange={handleChange}/>
           <textarea name='content' onChange={handleChange} value={form.content}></textarea>

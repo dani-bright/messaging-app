@@ -1,22 +1,33 @@
 import { ChangeEvent, FC, memo, useEffect, useState } from 'react';
 import styles from "./Message.module.css";
 import { AppContextInterface, useAppContext } from '../../contexts/AppContext/AppContext';
-import { MessageProps } from './Message';
+import { SubjectProps } from './Subject';
 import Message from '../../models/Message';
 import User from '../../models/User';
 import moment from 'moment-timezone';
+import { useConversation } from '../../hooks/useConversation';
 
 
-export interface MessagePreviewProps{
+export interface ConversationProps{
   message?: Message;
 }
 
-export const MessagePreview : FC<MessagePreviewProps> =({message: currentMessage})=> {
-  const { sendMessage, state: { user: me } } = useAppContext();
+export const Conversation : FC<ConversationProps> =({message: currentMessage})=> {
+  const { sendMessage, state: { user: me }, readConversation } = useAppContext();
   
   const [user, setUser] = useState<User>(undefined);
 
   const [reply, setReply] = useState("");
+
+  const conversationMessages = useConversation(currentMessage?.subject);
+  
+  useEffect(() => {
+    if (currentMessage) {
+      const conversationReceivedMessages = conversationMessages.filter(message => message.sender.id !== me.id);
+      conversationReceivedMessages.length && readConversation(me.id, conversationReceivedMessages.map(message => message.id))
+    }
+
+  }, [currentMessage]);
 
   useEffect(() => setUser(me), [me]);
 
@@ -38,11 +49,9 @@ export const MessagePreview : FC<MessagePreviewProps> =({message: currentMessage
     setReply(target.value);
   }
 
-  const userMessages = user ? [...user.sentMessages, ...user.receivedMessages] : [];
 
 
-  const conversation = userMessages.length && currentMessage ? userMessages.filter(message => message.subject === currentMessage.subject)
-    .sort((messageA: Message, messageB: Message) => messageA.createdAt > messageB.createdAt ? 1 : -1)
+  const messages = conversationMessages
     .map(message => (
     <div key={`conv-${message.id}`} className={styles.messageContent}>
       {message.sender.email === user.email ?"Moi" :message.sender.email}
@@ -53,12 +62,12 @@ export const MessagePreview : FC<MessagePreviewProps> =({message: currentMessage
         </div>
         <p>{ moment(message.createdAt).locale('fr').format("dddd, MMMM Do YYYY, h:mm:ss a").toString()}</p>
     </div>
-  )) : null;
+  ));
 
 
     return (
       <main className={styles.messagePreview}>
-        {currentMessage ? conversation : <></>
+        {currentMessage && conversationMessages.length ? messages : <></>
         }
       </main>
     );

@@ -1,18 +1,32 @@
-.message {
+.main {
   border-bottom: 1px solid #f4f4f4;
   width: 100%;
   height: 100px;
   color:#333333;
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.read{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6EB6F8;
+}
+
+.read.seen{
+  background: #ddd;
 }
 
 .subject{
-
+  margin-left: 1.5rem;
 }
 
 .sender{
-
+  font-weight: bold;
 }
 
 .send{

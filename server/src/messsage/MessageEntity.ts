@@ -11,6 +11,9 @@ export class Message extends BaseEntity {
   @Column()
   subject: string;
 
+  @Column()
+  read: boolean;
+
   @Column({ name: 'senderid' })
   senderId?: number;
 

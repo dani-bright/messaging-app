@@ -14,6 +14,7 @@ import { JwtAuthGuard } from 'src/auth/JwtAuthGuard';
 import { User } from './UserEntity';
 import { UserService } from './UserService';
 import { CreateUserDto } from './dtos/CreateUserDto';
+import { ReadSubjectDto } from './dtos/ReadSubjectDto';
 
 export type UserStrategyRequest = Request & { user?: User };
 
@@ -43,5 +44,10 @@ export class UserController {
   @Post('/')
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.service.createUser(createUserDto);
+  }
+
+  @Post('/read-conversation')
+  async readSubject(@Body() readSubjectDto: ReadSubjectDto): Promise<User> {
+    return this.service.readSubject(readSubjectDto);
   }
 }
