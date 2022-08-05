@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { FC, useContext, useState } from 'react';
-import { createUser, postLogin } from '../../api/user';
+import { createUser, getUsers, postLogin } from '../../api/user';
 import { Actions, defaultFunctionParameter } from '../../helpers/helpers';
 import User from '../../models/User';
 import { userSchema } from '../../schemas';
 import { useEntitiesContext } from '../EntitiesContext/EntitiesContext';
 import { ActionTypes } from './actions';
-import { usePersistedContext } from 'react-persist-context'
+import Message from '../../models/Message';
+import { createMessage } from '../../api/message';
 
 
 const setLocalStorage = (key, value) =>{
@@ -15,7 +16,7 @@ const setLocalStorage = (key, value) =>{
   }
 }
 
-const getLocalStorage = (key) =>{
+export const getLocalStorage = (key) =>{
   if (typeof window !== "undefined") {
     return localStorage.getItem(key)
   }
@@ -32,6 +33,7 @@ export interface StateInterface {
   connected: boolean;
   token: string;
   user: User;
+  users: User[];
 }
 
 export interface AppContextInterface {
@@ -39,8 +41,8 @@ export interface AppContextInterface {
   setToken: (token: string) => void;
   login: (email: string, password: string) => void;
   logout: () => void;
-  fetchUser: () => void;
-  postMessage: (id: number) => Promise<void>;
+  fetchUsers: () => void;
+  sendMessage: (message:Partial<Message>) => Promise<Message>;
   register: (user:Partial<User>) => Promise<void>;
 }
 
@@ -48,6 +50,7 @@ export const initialState: StateInterface = {
   token: getLocalStorage("token") || '',
   connected: false,
   user: null,
+  users: [],
 };
 
 export const AppReducer = (
@@ -68,10 +71,17 @@ export const AppReducer = (
       };
     }
  
-    case ActionTypes.SET_USER: {
+    case ActionTypes.SET_USER: {      
       return {
         ...state,
         user: action.payload,
+      };
+    }
+      
+    case ActionTypes.SET_USERS: {
+      return {
+        ...state,
+        users: action.payload,
       };
     }
     case ActionTypes.RESET_STATE: {
@@ -87,14 +97,14 @@ state: initialState,
   setToken: defaultFunctionParameter,
   login: defaultFunctionParameter,
   logout: defaultFunctionParameter,
-  postMessage: Promise.reject,
+  sendMessage: Promise.reject,
   register: Promise.reject,
-  fetchUser: defaultFunctionParameter,
+  fetchUsers: defaultFunctionParameter,
 });
 export const useCart = () => useContext(AppContext);
 
 export const AppProvider  = ({ children }: { children: JSX.Element }) => {
-  const { state, dispatch} = usePersistedContext();
+  const [ state, dispatch] = React.useReducer(AppReducer, initialState);
 
   const { addEntities, resetState } = useEntitiesContext();
 
@@ -119,7 +129,6 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
 
   const register = React.useCallback(async (user:Partial<User>) => {
     await createUser(user);
-
   }, []);
 
   const logout = React.useCallback(async () => {
@@ -131,15 +140,17 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
   }, [state.token]);
 
 
-  const sendMessage = React.useCallback(async () => {
+  const sendMessage = React.useCallback(async (message:Partial<Message>) => {
+    const createdMessage = await createMessage(state.token, message);
+    dispatch({ type: ActionTypes.SET_USER, payload: {...state.user, sentMessages: [...state.user.sentMessages, createdMessage] } });
 
-  }, []);
+    return createdMessage;
+  }, [state.token, state.user]);
 
-  const fetchUser = React.useCallback(async () => {
-    // const profile = await getContact(state.token);
+  const fetchUsers = React.useCallback(async () => {
+    const users = await getUsers(state.token);
 
-    // addEntities(contact, profile);
-    // dispatch({ type: ActionTypes.SET_CONTACT, payload: profile.id });
+    dispatch({ type: ActionTypes.SET_USERS, payload: users });
   }, [state.token]);
 
     return (
@@ -148,8 +159,8 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
             login,
             logout,
             setToken,
-            fetchUser,
-        postMessage: sendMessage,
+            fetchUsers,
+            sendMessage,
             register
         }}>
         {children}

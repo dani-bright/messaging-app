@@ -21,6 +21,12 @@ export type UserStrategyRequest = Request & { user?: User };
 export class UserController {
   constructor(private readonly service: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/')
+  async getAll(): Promise<User[]> {
+    return this.service.getAll();
+  }
+
   @Get('/authenticated')
   async getAuthenticatedUser(
     @Req() request: UserStrategyRequest,

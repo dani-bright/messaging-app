@@ -1,0 +1,29 @@
+.main {
+  width: 100vw;
+  min-height: 100vh;
+}
+
+.inbox {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 92vh;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  height: 8vh;
+}
+
+.messages{
+  width: 20vw;
+  background: #fff;
+}
+
+.preview{
+  width: 80vw;
+  background: #F1F1F1;
+}

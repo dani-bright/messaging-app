@@ -1,18 +1,20 @@
-import Link from 'next/link'
-import styles from "../styles/Home.module.css";
-import { Menu } from './Menu';
-import { usePersistedContext } from 'react-persist-context'
 import { useAppContext } from '../contexts/AppContext/AppContext';
+import { useState, useEffect } from 'react';
+import styles from "../styles/Inbox.module.css";
 
 
-export const Header = () => {
-  const { state: { connected } } = usePersistedContext();
-  
-  const { logout } = useAppContext();
+
+export const Header = () => {  
+  const { logout, state: { connected:userConnected } } = useAppContext();
+
+  const [connected, setConnected] = useState(false);
+
+  //https://nextjs.org/docs/messages/react-hydration-error
+  useEffect(() => {setConnected(userConnected)}, []);
 
   return (
-    <header>
-      {!connected ? <Menu /> : null}
+    <header className={styles.header}>
+      <img src="/logo.svg" alt="sneakers" />
       {connected ? <p onClick={logout}>deconnexion</p> : null}
       
     </header>

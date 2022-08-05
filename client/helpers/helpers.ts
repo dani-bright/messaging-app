@@ -10,6 +10,20 @@ export function isObject(item: any): boolean {
   );
 }
 
+export function groupBy<K>(list:K[], keyGetter: (item: any) => any){
+    const map = new Map();
+    list.forEach((item) => {
+         const key = keyGetter(item);
+         const collection = map.get(key);
+         if (!collection) {
+             map.set(key, [item]);
+         } else {
+             collection.push(item);
+         }
+    });
+    return map;
+}
+
 export function mergeDeep(target: any, ...sources: any): any {
   if (!sources.length) return target;
   const source = sources.shift();

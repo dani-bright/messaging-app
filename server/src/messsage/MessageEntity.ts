@@ -11,9 +11,15 @@ export class Message extends BaseEntity {
   @Column()
   subject: string;
 
+  @Column({ name: 'senderid' })
+  senderId?: number;
+
   @ManyToOne(() => User, (user) => user.sentMessages)
   @JoinColumn({ name: 'senderid' })
   sender?: User;
+
+  @Column({ name: 'receiverid' })
+  receiverId?: number;
 
   @ManyToOne(() => User, (user) => user.receivedMessages)
   @JoinColumn({ name: 'receiverid' })

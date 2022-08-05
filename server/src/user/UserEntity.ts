@@ -29,7 +29,12 @@ export class User extends BaseEntity {
 
   public static get scopes(): Record<string, string[]> {
     return {
-      full: ["sentMessages", "receivedMessages"],
+      full: [
+        'sentMessages',
+        'receivedMessages',
+        'receivedMessages.sender',
+        'sentMessages.sender',
+      ],
     };
   }
 }

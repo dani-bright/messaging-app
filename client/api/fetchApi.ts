@@ -12,7 +12,7 @@ export async function fetchApi<T>(
   const headers = new Headers();
 
   if (token) {
-    headers.append('Authorization', token);
+    headers.append('Authorization', `Bearer ${token}`);
   }
 
   if (params.body && !(params.body instanceof FormData)) {

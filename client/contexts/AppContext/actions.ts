@@ -2,5 +2,6 @@ export const ActionTypes = {
   SET_TOKEN: 'SET_TOKEN',
   SET_CONNECTED: 'SET_CONNECTED',
   SET_USER: 'SET_USER',
+  SET_USERS: 'SET_USERS',
   RESET_STATE: 'RESET_STATE',
 };

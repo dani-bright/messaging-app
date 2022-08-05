@@ -1,0 +1,47 @@
+.form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  width: 100%
+}
+
+.form >*{
+  margin: 1rem 0;
+}
+
+.form textarea{
+  resize: none;
+  height: 400px;
+  width: 100%;
+}
+
+.form input, .form select {
+  display: block;
+  width: 100%;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  height: 2.5rem;
+  background: #fff;
+}
+
+.form p{
+  text-align: right;
+  cursor: pointer;
+}
+
+.form.popup{
+  position: absolute;
+}
+
+.form.hide{
+  display: none;
+}
+
+.form.show{
+  z-index: 100;
+  width: 400px;
+  display: block;
+  bottom: 1rem;
+  right: 1rem;
+}

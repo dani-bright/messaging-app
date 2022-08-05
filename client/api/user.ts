@@ -21,3 +21,10 @@ export async function createUser(
     body: user,
   });
 }
+
+export async function getUsers(
+    token: string,
+
+): Promise<User & { token: string }> {
+  return fetchApi('GET', 'user', token);
+}

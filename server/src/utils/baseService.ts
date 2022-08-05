@@ -38,14 +38,12 @@ export abstract class BaseService<T> {
     where: any = {},
     relations: string[] = [],
     skip = 0,
-    take = 10,
     order: any = {},
   ): Promise<T[]> {
     return this.repository.find({
       where,
       order,
       skip,
-      take,
       relations: relations,
     });
   }

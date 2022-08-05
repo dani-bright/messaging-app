@@ -1,14 +1,13 @@
 import styles from "../styles/Home.module.css";
-
+import formStyles from "../styles/Form.module.css";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAppContext } from "../contexts/AppContext/AppContext";
-import User from "../models/User";
 import { useRouter } from "next/router";
-import { usePersistedContext } from 'react-persist-context'
+import Link from "next/link";
 
 
 export default function Register() {
-   const { state: { connected } } = usePersistedContext();
+   const { state: { connected } } = useAppContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -39,19 +38,26 @@ export default function Register() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-      <form onSubmit={submit} className={styles.form}>
-          <input className={styles.input} type="email" name="email" onChange={handleChange} value={form.email} placeholder="email" />
-          
-          <input className={styles.input} type="text" name="firstname" onChange={handleChange} value={form.firstname} placeholder="firstname" />
+        <img src="/logo.svg" alt="sneakers" />
 
-          <input className={styles.input} type="text" name="lastname" onChange={handleChange} value={form.lastname} placeholder="lastname" />
+        <form onSubmit={submit} className={formStyles.form}>
+          <input type="email" name="email" onChange={handleChange} value={form.email} placeholder="email" />
+            
+          <input type="text" name="firstname" onChange={handleChange} value={form.firstname} placeholder="firstname" />
+
+            <input type="text" name="lastname" onChange={handleChange} value={form.lastname} placeholder="lastname" />
+            
+            <input type="password" name="password" onChange={handleChange} value={form.password} placeholder="password" />
           
-          <input className={styles.input} type="password" name="password" onChange={handleChange} value={form.password} placeholder="password" />
-        
-        <button>login</button>
-      </form>     
+          <button className={styles.button}>S'enregistrer</button>
+          <Link href="/" >
+            <a className={styles.register}>Connexion</a>
+          </Link>
+        </form>     
       </main>
-
+      <div className={styles.imgContainer}>
+        <img src="/login-background.png" alt="sneakers" />
+      </div>
       
     </div>
   );

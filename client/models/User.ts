@@ -10,10 +10,6 @@ export default class User {
   firstname!: string;
   lastname!: string;
 
-
-  identityDocuments: Document[] = [];
-  rib: Document;
-
   constructor(data: Partial<User> | any = {}) {
     Object.assign(this, data);
   }

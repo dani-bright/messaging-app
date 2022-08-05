@@ -26,6 +26,7 @@ export class UserService extends BaseService<User> {
     return this.repository
       .findOneOrFail({
         where: { email },
+        // we might have some perf issues by pulling the relations like this when the user will have a lot of messages. A solution would be to rewrite a specific qeury using a query builder
         relations: User.scopes.full,
       })
       .catch(() => {
