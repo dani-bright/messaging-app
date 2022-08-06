@@ -1,5 +1,6 @@
+import User from '@/models/User';
 import { Moment } from 'moment-timezone';
-import User from './User';
+
 export default class Message {
   id!: number;
   sender!: User;
@@ -14,6 +15,4 @@ export default class Message {
   constructor(data: Record<string, any>) {
     Object.assign(this, data);
   }
-
- 
 }

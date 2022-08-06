@@ -1,5 +1,4 @@
-import Apartment from './Message';
-import Message from './Message';
+import Message from '@/models/Message';
 
 export default class User {
   id!: number;
@@ -13,5 +12,4 @@ export default class User {
   constructor(data: Partial<User> | any = {}) {
     Object.assign(this, data);
   }
-
 }

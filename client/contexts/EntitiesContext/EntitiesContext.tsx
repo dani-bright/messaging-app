@@ -1,12 +1,8 @@
-import React, { useCallback } from 'react';
-import { Actions, defaultFunctionParameter, mergeDeep } from '../../helpers/helpers';
-import Message from '../../models/Message';
-import User from '../../models/User';
-import { normalize } from 'normalizr';
-
-
 import { ActionTypes } from './actions';
-import { Schemas } from '../../schemas';
+import { Actions, defaultFunctionParameter } from '@/helpers/helpers';
+import Message from '@/models/Message';
+import User from '@/models/User';
+import React, { useCallback } from 'react';
 
 type Collection<T> = Record<number | string, T>;
 
@@ -70,6 +66,5 @@ export const useEntitiesContext = () => {
 };
 
 export const useEntities = () => useEntitiesContext().state.entities;
-
 
 export default EntitiesContext;

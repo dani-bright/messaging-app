@@ -23,18 +23,15 @@ export async function fetchApi<T>(
     headers.append(key, value);
   });
 
-  const response = await fetch(
-    `http://localhost:5000/${path}`,
-    {
-      method,
-      headers: headers,
-      signal,
-      body:
-        params.body && !(params.body instanceof FormData)
-          ? JSON.stringify(params.body)
-          : params.body,
-    },
-  );
+  const response = await fetch(`http://localhost:5000/${path}`, {
+    method,
+    headers: headers,
+    signal,
+    body:
+      params.body && !(params.body instanceof FormData)
+        ? JSON.stringify(params.body)
+        : params.body,
+  });
 
   if (!response.ok) {
     throw await response.json();

@@ -1,6 +1,5 @@
-
-import User from '../models/User';
-import { fetchApi } from './fetchApi';
+import { fetchApi } from '@/api/fetchApi';
+import User from '@/models/User';
 
 export async function postLogin(
   email: string,
@@ -15,7 +14,7 @@ export async function postLogin(
 }
 
 export async function createUser(
-  user:Partial<User>
+  user: Partial<User>,
 ): Promise<User & { token: string }> {
   return fetchApi('POST', 'user', undefined, {
     body: user,
@@ -23,7 +22,7 @@ export async function createUser(
 }
 
 export async function getUsers(
-    token: string,
+  token: string,
 ): Promise<User & { token: string }> {
   return fetchApi('GET', 'user', token);
 }
@@ -31,12 +30,9 @@ export async function getUsers(
 export async function readSubject(
   token: string,
   userId: number,
-  messageIds:number[]
+  messageIds: number[],
 ) {
-  return fetchApi<User>(
-    'POST',
-    `user/read-conversation`,
-    token,
-    {body:{messageIds, userId}}
-  );
+  return fetchApi<User>('POST', `user/read-conversation`, token, {
+    body: { messageIds, userId },
+  });
 }

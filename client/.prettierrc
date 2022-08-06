@@ -1,0 +1,7 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "importOrderParserPlugins": ["classProperties", "jsx", "typescript"],
+  "importOrderSeparation": true,
+  "arrowParens": "always"
+}

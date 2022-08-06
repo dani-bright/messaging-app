@@ -1,32 +1,27 @@
-import { FC, memo } from 'react';
-import styles from "./Message.module.css";
-import Message from '../../models/Message';
+import Message from '@/models/Message';
+import styles from '@/styles/Message.module.css';
+import React, { FC } from 'react';
 
-export interface SubjectProps{
+export interface SubjectProps {
   message: Message;
   read: boolean;
-  onClick: ({sender, subject, content}:Pick<Message, "sender" | "subject" | "content">) => any;
+  onClick: (message: Message) => any;
 }
 
 export const Subject: FC<SubjectProps> = ({ message, onClick, read }) => {
   const handleClick = () => {
-    onClick({
-      sender: message.sender,
-      subject: message.subject,
-      content: message.content,
-    })
-  }
-  
-    return (
-      <main className={styles.message} onClick={handleClick}>
-        <div className={`${styles.read} ${read ? styles.seen : ''}`}></div>
-        <div className={styles.subject}>
-          <p className={styles.sender}>
+    onClick(message);
+  };
+
+  return (
+    <main className={styles.message} onClick={handleClick}>
+      <div className={`${styles.read} ${read ? styles.seen : ''}`}></div>
+      <div className={styles.subject}>
+        <p className={styles.sender}>
           {message.sender?.firstname} {message.sender?.lastname}
-          </p>
-          <p >{message.subject}</p>
-        </div>
-        
-      </main>
-    );
+        </p>
+        <p>{message.subject}</p>
+      </div>
+    </main>
+  );
 };

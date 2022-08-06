@@ -1,0 +1,87 @@
+.message {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100px;
+  padding: 1rem 1.5rem;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+  border-top: 1px solid #e5e4e4;
+}
+
+.read {
+  width: 20px;
+  height: 20px;
+  background: #6eb6f8;
+  border-radius: 50%;
+}
+
+.read.seen {
+  background: #ddd;
+}
+
+.subject {
+  margin-left: 1.5rem;
+}
+
+.sender {
+  font-weight: 800;
+}
+
+.send {
+  display: block;
+  padding: 0.5rem;
+  margin: 0.5rem auto;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  background: #333;
+  border: none;
+}
+
+.messagePreview {
+  height: 100%;
+}
+
+.conversation {
+  height: 80%;
+  overflow: auto;
+}
+
+.messageContent {
+  padding: 1rem 2rem;
+  margin: 1rem;
+  background: #fff;
+}
+
+.reply {
+  bottom: 2rem;
+  width: 100%;
+  height: 20%;
+  padding: 1rem;
+}
+
+.reply textarea {
+  width: 100%;
+  height: 5rem;
+  resize: none;
+  border: 1px solid #ddd;
+}
+
+.button {
+  padding: 1rem;
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: #333;
+  border: none;
+}
+
+.form {
+  display: block;
+}

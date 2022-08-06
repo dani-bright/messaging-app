@@ -1,14 +1,13 @@
-import '../styles/globals.css'
-import { AppProvider, AppReducer, initialState } from '../contexts/AppContext/AppContext';
-import { Header } from '../components/Header';
+import { AppProvider } from '@/contexts/AppContext/AppContext';
+import '@/styles/globals.css';
+import React from 'react';
 
 function MyApp({ Component, pageProps }) {
   return (
-
     <AppProvider>
-        <Component {...pageProps} />
+      <Component {...pageProps} />
     </AppProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
