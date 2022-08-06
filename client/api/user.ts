@@ -24,12 +24,11 @@ export async function createUser(
 
 export async function getUsers(
     token: string,
-
 ): Promise<User & { token: string }> {
   return fetchApi('GET', 'user', token);
 }
 
-export async function patchMessages(
+export async function readSubject(
   token: string,
   userId: number,
   messageIds:number[]

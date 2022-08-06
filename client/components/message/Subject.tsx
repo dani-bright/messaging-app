@@ -18,7 +18,7 @@ export const Subject: FC<SubjectProps> = ({ message, onClick, read }) => {
   }
   
     return (
-      <main className={styles.main} onClick={handleClick}>
+      <main className={styles.message} onClick={handleClick}>
         <div className={`${styles.read} ${read ? styles.seen : ''}`}></div>
         <div className={styles.subject}>
           <p className={styles.sender}>

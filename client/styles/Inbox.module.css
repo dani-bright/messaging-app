@@ -1,3 +1,60 @@
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  height: 8vh;
+}
+
+.right{
+  display: flex;
+  align-items: center;
+}
+
+.user{
+  display: flex;
+  align-items: center;
+  margin-right: 2rem;
+}
+
+.firstname{
+  text-transform: uppercase;
+}
+
+.email{
+  color :#666666;
+  font-size: 12px;
+}
+
+.avatar{
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #000;
+  margin-right:0.5rem;
+}
+
+.initial{
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 50px;
+}
+
+.count{
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  bottom: 0;
+  text-align: center;
+  right: 0;
+}
+
 .main {
   width: 100vw;
   min-height: 100vh;
@@ -7,20 +64,20 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  min-height: 92vh;
+  height: 92vh;
+  overflow: hidden;
 }
 
-.header{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2rem;
-  height: 8vh;
+.inboxHeader{
+  margin: 0.6rem 0;
 }
 
 .messages{
   width: 20vw;
   background: #fff;
+  overflow: auto;
+  border-top: 1px solid #e5e4e4;
+  text-align: center;
 }
 
 .preview{

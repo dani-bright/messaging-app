@@ -1,5 +1,3 @@
 export const ActionTypes = {
-  ADD_ENTITIES: 'ADD_ENTITIES',
-  ADD_REFERENCES: 'ADD_REFERENCES',
   RESET_STATE: 'RESET_STATE',
 };

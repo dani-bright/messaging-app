@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FC, useContext, useState } from 'react';
-import { createUser, getUsers, postLogin, patchMessages } from '../../api/user';
+import { createUser, getUsers, postLogin, readSubject } from '../../api/user';
 import { Actions, defaultFunctionParameter } from '../../helpers/helpers';
 import User from '../../models/User';
 import { userSchema } from '../../schemas';
@@ -9,12 +9,6 @@ import { ActionTypes } from './actions';
 import Message from '../../models/Message';
 import { createMessage } from '../../api/message';
 
-
-const setLocalStorage = (key, value) =>{
-  if (typeof window !== "undefined") {
-    localStorage.setItem(key, value)
-  }
-}
 
 export const getLocalStorage = (key) =>{
   if (typeof window !== "undefined") {
@@ -108,7 +102,7 @@ export const useCart = () => useContext(AppContext);
 export const AppProvider  = ({ children }: { children: JSX.Element }) => {
   const [ state, dispatch] = React.useReducer(AppReducer, initialState);
 
-  const { addEntities, resetState } = useEntitiesContext();
+  const { resetState } = useEntitiesContext();
 
   const setConnected = React.useCallback((connected: boolean) => {
     dispatch({ type: ActionTypes.SET_CONNECTED, payload: connected });
@@ -126,7 +120,6 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
     dispatch({ type: ActionTypes.SET_USER, payload: loggedUser });
 
     setConnected(true);
-    addEntities(userSchema, loggedUser);
   }, []);
 
   const register = React.useCallback(async (user:Partial<User>) => {
@@ -150,7 +143,7 @@ export const AppProvider  = ({ children }: { children: JSX.Element }) => {
   }, [state.token, state.user]);
 
   const readConversation = React.useCallback(async (userId:number, messageIds:number[]) => {
-    const user = await patchMessages(state.token, userId, messageIds);
+    const user = await readSubject(state.token, userId, messageIds);
     dispatch({ type: ActionTypes.SET_USER, payload: user });
 
   }, [state.token, state.user]);

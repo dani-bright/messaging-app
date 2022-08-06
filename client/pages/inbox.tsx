@@ -16,12 +16,12 @@ import { useConversation } from "../hooks/useConversation";
 
 export default function Inbox() {
 
-  const { state: { connected:userConnected, user:me }, readConversation } = useAppContext() ;
+  const { state: { connected:userConnected, user:me } } = useAppContext() ;
   const router = useRouter();
 
   const [user, setUser] = useState<User>(undefined);
-
   const [selectedMessage, setSelectedMessage] = useState(undefined);
+  const [filterSubjects, setFilterSubjects] = useState(true);
 
   //https://nextjs.org/docs/messages/react-hydration-error
   useEffect(() => {
@@ -33,8 +33,6 @@ export default function Inbox() {
       router.push('/')
     }
   }, [userConnected]);
-
-
   
   const showMessagePreview = (message) => {
     setSelectedMessage(message);
@@ -47,28 +45,43 @@ export default function Inbox() {
   const messages = [...user.receivedMessages,...user.sentMessages];
   const subjects = groupBy(messages, (message: Message) => message.subject);
 
-  const receivedSubject = Array.from(subjects.values()).map(messages => {    
-    const read = messages.filter(message=>message.sender.id !== user.id).every(message => message.read);
+  const unReadReceivedSubjects = Array.from(subjects.values()).map(messages => { 
+    const received = messages.filter(message => message.sender.id !== user.id);    
+
+    const unRead = received.length && received.some(message => !message.read);
     
-    return <Subject key={messages[0].subject} read={read} message={messages[0]} onClick={showMessagePreview} />
+    return unRead ? <Subject key={messages[0].subject} read={false} message={messages[0]} onClick={showMessagePreview} /> : null;
   });  
   
-  const inboxMessageCount = user.receivedMessages?.length || 0;
+
+  const receivedSubjects = Array.from(subjects.values()).map(messages => {    
+    const allRed = messages.filter(message=>message.sender.id !== user.id).every(message => message.read);
+    
+    return <Subject key={messages[0].subject} read={allRed} message={messages[0]} onClick={showMessagePreview} />;
+  });  
+
+  
+  
+  const inboxMessageCount = unReadReceivedSubjects.reduce((acc, subject) => subject ? acc+1 :acc, 0);
+
+  const toggleFilter = () => {
+    setFilterSubjects(!filterSubjects)
+  }
 
   return (
     <main className={styles.main}>
-      <Header />
+      <Header unReadMessageCount={inboxMessageCount}/>
       <div className={styles.inbox}>
         <aside className={styles.messages}>
-          <MessageSender />
-          <div>
-            <p>boite de réception ({inboxMessageCount})</p>
+          <div className={styles.inboxHeader}>
+            <MessageSender />
+            <p>Boite de réception ({inboxMessageCount})</p>
             <div>
-              <input type="checkbox" />
-              afficher uniquement les mails non-lus
+              <input type="checkbox" checked={filterSubjects} onChange={ toggleFilter}/>
+              Afficher uniquement les mails non-lus
             </div>
           </div>
-          {receivedSubject}
+          {filterSubjects? unReadReceivedSubjects :receivedSubjects}
         </aside>
       <section className={styles.preview}>
           <Conversation message={selectedMessage}/>

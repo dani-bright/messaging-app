@@ -1,5 +1,5 @@
-.main {
-  border-bottom: 1px solid #f4f4f4;
+.message {
+  border-top: 1px solid #e5e4e4;
   width: 100%;
   height: 100px;
   color:#333333;
@@ -8,6 +8,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  text-align: left;
 }
 
 .read{
@@ -42,20 +43,25 @@
 }
 
 .messagePreview{
-  min-height: 100%;
-  position: relative;
+  height: 100%;
+}
+
+.conversation{
+  height: 80%;
+  overflow: auto;
 }
 
 .messageContent{
   background: #fff;
   padding: 1rem 2rem;
+  margin :1rem;
 }
 
 .reply{
-  position: absolute;
   padding: 1rem;
   bottom: 2rem;
-  width: 90%;
+  width: 100%;
+  height: 20%;
 }
 
 .reply textarea {

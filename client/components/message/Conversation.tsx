@@ -49,17 +49,11 @@ export const Conversation : FC<ConversationProps> =({message: currentMessage})=>
     setReply(target.value);
   }
 
-
-
   const messages = conversationMessages
     .map(message => (
     <div key={`conv-${message.id}`} className={styles.messageContent}>
       {message.sender.email === user.email ?"Moi" :message.sender.email}
       <p>{message.content}</p>
-      <div className={styles.reply}>
-        <textarea name="reply" value={reply} onChange={handleReplyChange}></textarea>
-        <button className={styles.button} onClick={postMessage}>Répondre</button>
-        </div>
         <p>{ moment(message.createdAt).locale('fr').format("dddd, MMMM Do YYYY, h:mm:ss a").toString()}</p>
     </div>
   ));
@@ -67,7 +61,17 @@ export const Conversation : FC<ConversationProps> =({message: currentMessage})=>
 
     return (
       <main className={styles.messagePreview}>
-        {currentMessage && conversationMessages.length ? messages : <></>
+        {currentMessage && conversationMessages.length ? (
+          <>
+            <section className={styles.conversation}>
+              {messages}
+            </section>
+            <div className={styles.reply}>
+                <textarea name="reply" value={reply} onChange={handleReplyChange}></textarea>
+                <button className={styles.button} onClick={postMessage}>Répondre</button>
+              </div>
+          </>
+        ) : <></>
         }
       </main>
     );
