@@ -1,5 +1,4 @@
 import { ActionTypes } from './actions';
-import { createMessage } from '@/api/message';
 import { createUser, getUsers, postLogin, readSubject } from '@/api/user';
 import { useEntitiesContext } from '@/contexts/EntitiesContext/EntitiesContext';
 import { Actions, defaultFunctionParameter } from '@/helpers/helpers';
@@ -16,11 +15,6 @@ export const getLocalStorage = (key: string) => {
   return undefined;
 };
 
-export interface ICartProvider {
-  setCartUuid: (id: string) => void;
-  uuid?: string;
-}
-
 export interface StateInterface {
   connected: boolean;
   token: string;
@@ -34,9 +28,9 @@ export interface AppContextInterface {
   login: (email: string, password: string) => void;
   logout: () => void;
   fetchUsers: () => Promise<void>;
-  sendMessage: (message: Partial<Message>) => Promise<Message>;
   register: (user: Partial<User>) => Promise<void>;
   readConversation: (userId: number, messageIds: number[]) => Promise<void>;
+  updateUserMessages: (message: Message) => any;
 }
 
 export const initialState: StateInterface = {
@@ -67,7 +61,7 @@ export const AppReducer = (
     case ActionTypes.SET_USER: {
       return {
         ...state,
-        user: action.payload,
+        user: action.payload as User,
       };
     }
 
@@ -90,10 +84,10 @@ export const AppContext = React.createContext<AppContextInterface>({
   setToken: defaultFunctionParameter,
   login: defaultFunctionParameter,
   logout: defaultFunctionParameter,
-  sendMessage: Promise.reject,
   register: Promise.reject,
   fetchUsers: defaultFunctionParameter,
   readConversation: Promise.reject,
+  updateUserMessages: defaultFunctionParameter,
 });
 export const useCart = () => useContext(AppContext);
 
@@ -131,22 +125,6 @@ export const AppProvider = ({ children }: { children: JSX.Element }) => {
     resetState();
   }, [state.token]);
 
-  const sendMessage = React.useCallback(
-    async (message: Partial<Message>) => {
-      const createdMessage = await createMessage(state.token, message);
-      dispatch({
-        type: ActionTypes.SET_USER,
-        payload: {
-          ...state.user,
-          sentMessages: [...state.user.sentMessages, createdMessage],
-        },
-      });
-
-      return createdMessage;
-    },
-    [state.token, state.user],
-  );
-
   const readConversation = React.useCallback(
     async (userId: number, messageIds: number[]) => {
       const user = await readSubject(state.token, userId, messageIds);
@@ -161,6 +139,26 @@ export const AppProvider = ({ children }: { children: JSX.Element }) => {
     dispatch({ type: ActionTypes.SET_USERS, payload: users });
   }, [state.token]);
 
+  const updateUserMessages = React.useCallback(
+    async (message: Message) => {
+      dispatch({
+        type: ActionTypes.SET_USER,
+        payload: {
+          ...state.user,
+          sentMessages:
+            message.senderId !== state.user!.id
+              ? [...state.user!.sentMessages]
+              : [...state.user!.sentMessages, message],
+          receivedMessages:
+            message.senderId !== state.user!.id
+              ? [...state.user!.receivedMessages, message]
+              : [...state.user!.receivedMessages],
+        },
+      });
+    },
+    [state.token, state.user],
+  );
+
   return (
     <AppContext.Provider
       value={{
@@ -169,9 +167,9 @@ export const AppProvider = ({ children }: { children: JSX.Element }) => {
         logout,
         setToken,
         fetchUsers,
-        sendMessage,
         register,
         readConversation,
+        updateUserMessages,
       }}
     >
       {children}

@@ -52,9 +52,27 @@
 }
 
 .messageContent {
-  padding: 1rem 2rem;
   margin: 1rem;
   background: #fff;
+}
+
+.content {
+  padding: 0.5rem;
+}
+
+.messageContentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem 0.5rem;
+  padding-bottom: 0.2rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  background: #000;
+}
+
+.messageContentHeader p:nth-child(2) {
+  color: #bfbdbd;
 }
 
 .reply {

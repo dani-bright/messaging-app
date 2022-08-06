@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 
 import { JwtAuthGuard } from 'src/auth/JwtAuthGuard';
 
@@ -16,5 +16,10 @@ export class MessageController {
     @Body() createMessageDto: CreateMessageDto,
   ): Promise<Message> {
     return this.service.sendMessage(createMessageDto);
+  }
+
+  @Get('/')
+  async nothing(): Promise<Message> {
+    return;
   }
 }

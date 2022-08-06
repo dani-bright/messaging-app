@@ -1,4 +1,6 @@
 import { useAppContext } from '../../contexts/AppContext/AppContext';
+import { sendMessage, useSocket } from '@/hooks/useSocket';
+import Message from '@/models/Message';
 import formStyles from '@/styles/Form.module.css';
 import homeStyles from '@/styles/Home.module.css';
 import styles from '@/styles/Message.module.css';
@@ -6,16 +8,24 @@ import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
 
 export const MessageSender: FC = () => {
   const {
-    sendMessage,
     state: { users, user: currentUser },
+    updateUserMessages,
   } = useAppContext();
 
-  const [show, setShow] = useState(false);
-  const [form, setForm] = useState({
+  const socket = useSocket();
+
+  socket.on('newMessage', (chat: Message) => {
+    updateUserMessages(chat);
+  });
+
+  const formInitialState = {
     receiverId: '',
     subject: '',
     content: '',
-  });
+  };
+
+  const [show, setShow] = useState(false);
+  const [form, setForm] = useState({ ...formInitialState });
 
   const hideSender = () => {
     setShow(false);
@@ -23,12 +33,14 @@ export const MessageSender: FC = () => {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    await sendMessage({
+    socket.emit('chat', {
       receiverId: parseInt(form.receiverId),
       subject: form.subject,
       content: form.content,
       senderId: currentUser!.id,
     });
+
+    setForm({ ...formInitialState });
     hideSender();
   };
 
@@ -58,7 +70,11 @@ export const MessageSender: FC = () => {
         }`}
       >
         <p onClick={hideSender}>fermer</p>
-        <select name="receiverId" onChange={handleChange}>
+        <select
+          name="receiverId"
+          onChange={handleChange}
+          value={form.receiverId}
+        >
           <option value="">choissez un destinataire</option>
           {receivers.map((user) => (
             <option key={user.id} value={user.id}>

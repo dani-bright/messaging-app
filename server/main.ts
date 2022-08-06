@@ -3,6 +3,7 @@ import * as moment from 'moment-timezone';
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 import { AppModule } from './AppModule';
 
@@ -20,6 +21,7 @@ async function bootstrap() {
     }),
   );
 
+  app.useWebSocketAdapter(new IoAdapter(app));
   await app.listen(5000);
 
   console.log('app listening on port 5000');
