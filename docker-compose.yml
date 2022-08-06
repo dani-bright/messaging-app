@@ -1,0 +1,32 @@
+services:
+  client:
+    image: "messaging-app_client"
+    build:
+      context: ./client
+      dockerfile: ../Dockerfile-client
+    ports:
+      - "3000:3000"
+
+  docker-mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+    environment:
+      MYSQL_DATABASE: messaging-app
+      MYSQL_ROOT_PASSWORD: smartdb
+      MYSQL_PASSWORD: smartdb
+
+    
+  server:
+    image: "messaging-app_server"
+    build:
+      context: ./server
+      dockerfile: ../Dockerfile-server
+    depends_on:
+      - "docker-mysql"
+    ports:
+      - "5000:5000"

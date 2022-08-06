@@ -19,10 +19,8 @@ import { UserModule } from 'src/user/UserModule';
     TypeOrmModule.forFeature([User]),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      // host: 'docker-mysql',
-      // password: 'smartdb',
-      host: 'localhost',
-      password: '',
+      host: 'docker-mysql',
+      password: 'smartdb',
       port: 3306,
       username: 'root',
       database: 'messaging-app',

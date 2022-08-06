@@ -1,0 +1,12 @@
+FROM node:16
+
+COPY package*.json wait-for-it.sh ./
+
+RUN npm install
+
+COPY . .
+RUN chmod +x wait-for-it.sh
+
+EXPOSE 5000
+
+CMD ["./wait-for-it.sh", "docker-mysql:3306", "--", "npm", "run", "start:dev"]

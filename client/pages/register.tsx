@@ -17,17 +17,20 @@ export default function Register() {
     }
   }, [connected]);
 
-  const { register } = useAppContext();
-  const [form, setForm] = useState({
+  const formInitialState = {
     email: '',
     password: '',
     firstname: '',
     lastname: '',
-  } as Record<string, any>);
+  } as Record<string, any>;
+
+  const { register } = useAppContext();
+  const [form, setForm] = useState({ ...formInitialState });
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     await register(form);
+    setForm({ ...formInitialState });
   };
 
   const handleChange = (e: ChangeEvent) => {
